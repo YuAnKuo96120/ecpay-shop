@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>宇安商店</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', '微軟正黑體', Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    .shop-container {
+      max-width: 400px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+      padding: 32px 24px 24px 24px;
+    }
+    .shop-title {
+      text-align: center;
+      color: #333;
+      margin-bottom: 24px;
+    }
+    .product-img {
+      display: block;
+      margin: 0 auto 16px auto;
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      box-shadow: 0 1px 6px rgba(0,0,0,0.06);
+    }
+    .product-name {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #222;
+    }
+    .product-desc {
+      color: #666;
+      font-size: 0.98em;
+      margin-bottom: 12px;
+    }
+    .product-price {
+      color: #e53935;
+      font-size: 1.1em;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    .quantity-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .quantity-row label {
+      margin-right: 8px;
+      color: #444;
+    }
+    .quantity-row input[type="number"] {
+      width: 60px;
+      padding: 4px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1em;
+    }
+    .total-row {
+      text-align: right;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 1.05em;
+    }
+    .checkout-btn {
+      width: 100%;
+      background: linear-gradient(90deg, #ff9800 0%, #ff5722 100%);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px 0;
+      font-size: 1.1em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(255,152,0,0.08);
+    }
+    .checkout-btn:hover {
+      background: linear-gradient(90deg, #ffb74d 0%, #ff7043 100%);
+    }
+  </style>
+</head>
+<body>
+  <div class="shop-container">
+    <h1 class="shop-title">歡迎來到宇安商店</h1>
+    <img class="product-img" src="https://images.ctfassets.net/y2ske730sjqp/6bhPChRFLRxc17sR8jgKbe/6fa1c6e6f37acdc97ff635cf16ba6fb3/Logos-Readability-Netflix-logo.png" alt="測試商品 #1">
+    <div class="product-name">Netflix帳號</div>
+    <div class="product-desc">Netflix獨享帳號 </div>
+    <div class="product-price">NT$500</div>
+    <form action="/createOrder" method="post" id="order-form">
+      <div class="quantity-row">
+        <label for="quantity">數量：</label>
+        <input type="number" id="quantity" name="quantity" value="1" min="1" max="10">
+      </div>
+      <div class="quantity-row">
+        <label for="email">電子信箱：</label>
+        <input type="email" id="email" name="Email" required>
+      </div>
+      <input type="hidden" id="Amt" name="Amt" value="500">
+      <div class="total-row">
+        總價：<span id="total-price">NT$500</span>
+      </div>
+      <button class="checkout-btn" type="submit">立即結帳</button>
+    </form>
+  </div>
+  <script>
+    const price = 500;
+    const quantityInput = document.getElementById('quantity');
+    const totalPriceSpan = document.getElementById('total-price');
+    const amtInput = document.getElementById('Amt');
+    quantityInput.addEventListener('input', function() {
+      let qty = parseInt(quantityInput.value, 10);
+      if (isNaN(qty) || qty < 1) qty = 1;
+      if (qty > 10) qty = 10;
+      totalPriceSpan.textContent = `NT$${price * qty}`;
+      amtInput.value = price * qty;
+    });
+  </script>
+</body>
+</html>
