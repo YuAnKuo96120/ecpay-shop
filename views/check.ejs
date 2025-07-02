@@ -3,21 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <title>訂單確認</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Microsoft JhengHei', Arial, sans-serif;
+      background: #f7f7f7;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 400px;
+      margin: 60px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      padding: 32px 24px 24px 24px;
+      text-align: center;
+    }
+    h1 {
+      color: #2d8cf0;
+      margin-bottom: 24px;
+    }
+    .order-info {
+      text-align: left;
+      margin-bottom: 24px;
+      font-size: 1.1em;
+    }
+    .order-info p {
+      margin: 8px 0;
+      color: #333;
+    }
+    .loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 24px;
+      color: #888;
+      font-size: 1em;
+    }
+    .spinner {
+      border: 4px solid #f3f3f3;
+      border-top: 4px solid #2d8cf0;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      animation: spin 1s linear infinite;
+      margin-bottom: 12px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    button {
+      background: #2d8cf0;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 24px;
+      font-size: 1em;
+      cursor: pointer;
+      margin-top: 16px;
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: #1766b3;
+    }
+  </style>
 </head>
 <body>
-  <h1>訂單確認</h1>
-  <p>訂單編號：<%= order.MerchantOrderNo %></p>
-  <p>商品名稱：<%= order.ItemDesc %></p>
-  <p>金額：NT$<%= order.Amt %></p>
-  <form id="newebpay-form" method="post" action="<%= PayGateWay %>">
-    <input type="hidden" name="MerchantID" value="<%= MerchantID %>">
-    <input type="hidden" name="TradeInfo" value="<%= order.aesEncrypt %>">
-    <input type="hidden" name="TradeSha" value="<%= order.shaEncrypt %>">
-    <input type="hidden" name="Version" value="<%= Version %>">
-    <button type="submit">前往藍新金流付款</button>
-  </form>
+  <div class="container">
+    <h1>訂單確認</h1>
+    <div class="order-info">
+      <p>訂單編號：<%= order.MerchantOrderNo %></p>
+      <p>商品名稱：<%= order.ItemDesc %></p>
+      <p>金額：NT$<%= order.Amt %></p>
+    </div>
+    <!-- 自動送出表單，並加強安全性（escape 輸出） -->
+    <form id="newebpay-form" method="post" action="<%= PayGateWay %>">
+      <input type="hidden" name="MerchantID" value="<%- MerchantID %>">
+      <input type="hidden" name="TradeInfo" value="<%- order.aesEncrypt %>">
+      <input type="hidden" name="TradeSha" value="<%- order.shaEncrypt %>">
+      <input type="hidden" name="Version" value="<%- Version %>">
+      <button type="submit">前往藍新金流付款</button>
+    </form>
+    <div class="loading" id="loading-block" style="display:none;">
+      <div class="spinner"></div>
+      <span>正在導向藍新金流付款頁，請稍候…</span>
+    </div>
+  </div>
   <script>
-    document.getElementById('newebpay-form').submit();
+    // 延遲 1.5 秒自動送出表單，並顯示 loading
+    window.onload = function() {
+      var form = document.getElementById('newebpay-form');
+      var loading = document.getElementById('loading-block');
+      form.addEventListener('submit', function() {
+        loading.style.display = 'flex';
+      });
+      setTimeout(function() {
+        loading.style.display = 'flex';
+        form.submit();
+      }, 1500);
+    };
   </script>
 </body>
 </html> 
